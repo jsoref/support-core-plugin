@@ -2,6 +2,8 @@ package com.cloudbees.jenkins.support.util;
 
 import hudson.model.Describable;
 
+import javax.annotation.CheckForNull;
+
 public final class Markdown {
     public static final String NONE_STRING = "(none)";
 
@@ -18,4 +20,11 @@ public final class Markdown {
     }
 
     public static String prettyNone(String raw) { return raw != null && !raw.isEmpty() ? raw : NONE_STRING; }
+
+    public static String getDescriptorName(@CheckForNull Describable<?> d) {
+        if (d == null) {
+            return Markdown.NONE_STRING;
+        }
+        return "`" + Markdown.escapeBacktick(d.getClass().getName()) + "`";
+    }
 }

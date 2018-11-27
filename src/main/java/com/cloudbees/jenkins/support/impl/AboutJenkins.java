@@ -865,7 +865,7 @@ public class AboutJenkins extends Component {
             out.print(new GetJavaInfo("      -", "          +").call());
             out.println();
             for (Node node : jenkins.getNodes()) {
-                out.println("  * `" + Markdown.escapeBacktick(node.getNodeName()) + "` (" +getDescriptorName(node) +
+                out.println("  * `" + Markdown.escapeBacktick(node.getNodeName()) + "` (" +Markdown.getDescriptorName(node) +
                         ")");
                 out.println("      - Description:    _" +
                         Markdown.escapeUnderscore(Util.fixNull(node.getNodeDescription())) + "_");
@@ -881,8 +881,8 @@ public class AboutJenkins extends Component {
                 out.println("      - Usage:          `" + node.getMode() + "`");
                 if (node instanceof Slave) {
                     Slave slave = (Slave) node;
-                    out.println("      - Launch method:  " + getDescriptorName(slave.getLauncher()));
-                    out.println("      - Availability:   " + getDescriptorName(slave.getRetentionStrategy()));
+                    out.println("      - Launch method:  " + Markdown.getDescriptorName(slave.getLauncher()));
+                    out.println("      - Availability:   " + Markdown.getDescriptorName(slave.getRetentionStrategy()));
                 }
                 VirtualChannel channel = node.getChannel();
                 if (channel == null) {
