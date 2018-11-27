@@ -468,27 +468,6 @@ public class AboutJenkins extends Component {
         return format.format(number) + " " + measure + " (" + size + ")";
     }
 
-    private static class FailedPlugins extends PrintedContent {
-        public FailedPlugins() {
-            super("plugins/failed.txt");
-        }
-
-        @Override
-        protected void printTo(PrintWriter out) throws IOException {
-            PluginManager pluginManager = Jenkins.getInstance().getPluginManager();
-            List<PluginManager.FailedPlugin> plugins = pluginManager.getFailedPlugins();
-            // no need to sort
-            for (PluginManager.FailedPlugin w : plugins) {
-                out.println(w.name + " -> " + w.cause);
-            }
-        }
-
-        @Override
-        public boolean shouldBeFiltered() {
-            return false;
-        }
-    }
-
     private static class Dockerfile extends PrintedContent {
         private final List<PluginWrapper> activated;
         private final List<PluginWrapper> disabled;
