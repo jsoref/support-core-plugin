@@ -127,13 +127,6 @@ public class AboutJenkins extends Component {
         }
     }
 
-    private static String getDescriptorName(@CheckForNull Describable<?> d) {
-        if (d == null) {
-            return Markdown.NONE_STRING;
-        }
-        return "`" + Markdown.escapeBacktick(d.getClass().getName()) + "`";
-    }
-
     /**
      * A pre-check to see if a string is a build timestamp formatted date.
      *
@@ -313,12 +306,12 @@ public class AboutJenkins extends Component {
         }
     }
 
-    private static class GetJavaInfo extends MasterToSlaveCallable<String, RuntimeException> {
+    protected static class GetJavaInfo extends MasterToSlaveCallable<String, RuntimeException> {
         private static final long serialVersionUID = 1L;
         private final String maj;
         private final String min;
 
-        private GetJavaInfo(String majorBullet, String minorBullet) {
+        protected GetJavaInfo(String majorBullet, String minorBullet) {
             this.maj = majorBullet;
             this.min = minorBullet;
         }
@@ -532,77 +525,6 @@ public class AboutJenkins extends Component {
 
         public synchronized int n() {
             return s0;
-        }
-    }
-
-    private static class AboutContent extends PrintedContent {
-        private final Iterable<PluginWrapper> plugins;
-
-        AboutContent(Iterable<PluginWrapper> plugins) {
-            super("about.md");
-            this.plugins = plugins;
-        }
-        @Override protected void printTo(PrintWriter out) throws IOException {
-            final Jenkins jenkins = Jenkins.get();
-            out.println("Jenkins");
-            out.println("=======");
-            out.println();
-            out.println("Version details");
-            out.println("---------------");
-            out.println();
-            out.println("  * Version: `" + Markdown.escapeBacktick(Jenkins.VERSION) + "`");
-            File jenkinsWar = Lifecycle.get().getHudsonWar();
-            if (jenkinsWar == null) {
-                out.println("  * Mode:    Webapp Directory");
-            } else {
-                out.println("  * Mode:    WAR");
-            }
-            final JenkinsLocationConfiguration jlc = JenkinsLocationConfiguration.get();
-            out.println("  * Url:     " + (jlc != null ? jlc.getUrl() : "No JenkinsLocationConfiguration available"));
-            try {
-                final ServletContext servletContext = Stapler.getCurrent().getServletContext();
-                out.println("  * Servlet container");
-                out.println("      - Specification: " + servletContext.getMajorVersion() + "." + servletContext
-                        .getMinorVersion());
-                out.println(
-                        "      - Name:          `" + Markdown.escapeBacktick(servletContext.getServerInfo()) + "`");
-            } catch (NullPointerException e) {
-                // pity Stapler.getCurrent() throws an NPE when outside of a request
-            }
-            out.print(new GetJavaInfo("  *", "      -").call());
-            out.println();
-            out.println("Important configuration");
-            out.println("---------------");
-            out.println();
-            out.println("  * Security realm: " + getDescriptorName(jenkins.getSecurityRealm()));
-            out.println("  * Authorization strategy: " + getDescriptorName(jenkins.getAuthorizationStrategy()));
-            out.println("  * CSRF Protection: "  + jenkins.isUseCrumbs());
-            out.println("  * Initialization Milestone: " + jenkins.getInitLevel());
-            out.println("  * Support bundle anonymization: " + ContentFilters.get().isEnabled());
-            out.println();
-            out.println("Active Plugins");
-            out.println("--------------");
-            out.println();
-
-            for (PluginWrapper w : plugins) {
-                if (w.isActive()) {
-                    out.println("  * " + w.getShortName() + ":" + w.getVersion() + (w.hasUpdate()
-                            ? " *(update available)*"
-                            : "") + " '" + w.getLongName() + "'");
-                }
-            }
-            SupportPlugin supportPlugin = SupportPlugin.getInstance();
-            if (supportPlugin != null) {
-                SupportProvider supportProvider = supportPlugin.getSupportProvider();
-                if (supportProvider != null) {
-                    out.println();
-                    try {
-                        supportProvider.printAboutJenkins(out);
-                    } catch (Throwable e) {
-                        logger.log(Level.WARNING, null, e);
-                    }
-                }
-            }
         }
     }
 
