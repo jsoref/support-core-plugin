@@ -468,27 +468,6 @@ public class AboutJenkins extends Component {
         return format.format(number) + " " + measure + " (" + size + ")";
     }
 
-    private static class DisabledPlugins extends PrintedContent {
-        private final Iterable<PluginWrapper> plugins;
-
-        public DisabledPlugins(Iterable<PluginWrapper> plugins) {
-            super("plugins/disabled.txt");
-            this.plugins = plugins;
-        }
-
-        @Override
-        protected void printTo(PrintWriter out) throws IOException {
-            for (PluginWrapper w : plugins) {
-                out.println(w.getShortName() + ":" + w.getVersion() + ":" + (w.isPinned() ? "pinned" : "not-pinned"));
-            }
-        }
-
-        @Override
-        public boolean shouldBeFiltered() {
-            return false;
-        }
-    }
-
     private static class FailedPlugins extends PrintedContent {
         public FailedPlugins() {
             super("plugins/failed.txt");
