@@ -50,7 +50,7 @@ class AboutContent extends PrintedContent {
         } catch (NullPointerException e) {
             // pity Stapler.getCurrent() throws an NPE when outside of a request
         }
-        out.print(new AboutJenkins.GetJavaInfo("  *", "      -").call());
+        out.print(new JavaInfo("  *", "      -").call());
         out.println();
         out.println("Important configuration");
         out.println("---------------");

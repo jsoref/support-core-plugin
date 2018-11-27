@@ -60,7 +60,7 @@ class NodesContent extends PrintedContent {
         out.println("      - Labels:         " + getLabelString(jenkins));
         out.println("      - Usage:          `" + jenkins.getMode() + "`");
         out.println("      - Slave Version:  " + Launcher.VERSION);
-        out.print(new AboutJenkins.GetJavaInfo("      -", "          +").call());
+        out.print(new JavaInfo("      -", "          +").call());
         out.println();
         for (Node node : jenkins.getNodes()) {
             out.println("  * `" + Markdown.escapeBacktick(node.getNodeName()) + "` (" +Markdown.getDescriptorName(node) +
@@ -97,7 +97,7 @@ class NodesContent extends PrintedContent {
                 }
                 try {
                     final String javaInfo = AsyncResultCache.get(node, javaInfoCache,
-                            new AboutJenkins.GetJavaInfo("      -", "          +"), "Java info");
+                            new JavaInfo("      -", "          +"), "Java info");
                     if (javaInfo == null) {
                         logger.log(Level.FINE,
                                 "Could not get Java info for {0} and no cached value available",
